@@ -17,5 +17,8 @@ class Pykuli(object):
     def wait(seconds):
         time.sleep(seconds)
 
-    def move(self, x, y):
+    def _mouse_move(self, x, y):
         self.mouse.move(x, y)
+
+    def _mouse_click(self, x, y):
+        self.mouse.click(x, y)
