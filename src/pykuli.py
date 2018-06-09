@@ -4,8 +4,11 @@ import time
 
 from pykeyboard import PyKeyboard
 from pymouse import PyMouse
-from mss import mss
 from PIL import Image
+from mss import mss
+from template_match import template_match
+
+import pykuli_exceptions
 
 
 class Pykuli(object):
@@ -27,7 +30,7 @@ class Pykuli(object):
 
     @staticmethod
     def take_screenshot():
-        with mss.mss() as sct:
+        with mss() as sct:
             # Get a screenshot of the 1st monitor
             sct_img = sct.grab(sct.monitors[1])
 
@@ -42,3 +45,22 @@ class Pykuli(object):
             img.putdata(list(pixels))
 
             return img
+
+    def click(self, image_path):
+
+        try:
+            image = Image.open(self.default_path + image_path)
+            image = image.convert("RGB")
+            screenshot = self.take_screenshot()
+            x, y = template_match(screenshot, image)
+            self._mouse_move(x, y)
+            self._mouse_click(x, y)
+        except pykuli_exceptions.NoMatchException as err:
+            print err
+        except Exception as err:
+            print err
+
+
+if __name__ == u'__main__':
+    p = Pykuli(u'../')
+    p.click(u'teste2.png')
