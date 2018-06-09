@@ -1,0 +1,4 @@
+mss==3.2.1
+python-xlib==0.23
+PyUserInput==0.1.11
+six==1.11.0
