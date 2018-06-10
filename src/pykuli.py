@@ -34,6 +34,38 @@ class Pykuli(object):
         self.default_path = default_path
         self.logger = logging.getLogger()
 
+    def press_key(self, key):
+        """
+        Wrapper for the PyKeyboard press_key method.
+        It is only used to show a logging for debugging purposes.
+        """
+        self.logger.info(u'PRESS KEY "%s"', key)
+        self.keyboard.press_key(key)
+
+    def release_key(self, key):
+        """
+        Wrapper for the PyKeyboard release_key method.
+        It is only used to show a logging for debugging purposes.
+        """
+        self.logger.info(u'RELEASE KEY "%s"', key)
+        self.keyboard.release_key(key)
+
+    def tap_key(self, key):
+        """
+        Wrapper for the PyKeyboard tap_key method.
+        It is only used to show a logging for debugging purposes.
+        """
+        self.logger.info(u'TAP KEY "%s"', key)
+        self.keyboard.tap_key(key)
+
+    def type_string(self, string):
+        """
+        Wrapper for the PyKeyboard type_string method.
+        It is only used to show a logging for debugging purposes.
+        """
+        self.logger.info(u'TYPE STRING "%s"', string)
+        self.keyboard.type_string(string)
+
     @staticmethod
     def wait(seconds):
         """
@@ -100,12 +132,12 @@ class Pykuli(object):
 
                 screenshot = self.take_screenshot()
 
-                x, y = template_match(screenshot, image)
+                x_pos, y_pos = template_match(screenshot, image)
 
-                self.logger.info(u'CLICK AT (%s, %s)', x, y)
+                self.logger.info(u'CLICK AT (%s, %s)', x_pos, y_pos)
 
-                self.mouse.move(x, y)
-                self.mouse.click(x, y)
+                self.mouse.move(x_pos, y_pos)
+                self.mouse.click(x_pos, y_pos)
 
                 return
 
@@ -116,5 +148,5 @@ class Pykuli(object):
 
 
 if __name__ == u'__main__':
-    p = Pykuli(u'../')
-    p.click(u'teste2.png', 10)
+    pykuli = Pykuli(u'../')
+    pykuli.click(u'teste2.png', 10)
