@@ -4,7 +4,6 @@
 The Pykuli project is inspired by Sikuli.
 With the Pykuli class you can automate everything you see.
 """
-import time
 import logging
 from logging.config import fileConfig
 from datetime import datetime, timedelta
@@ -172,7 +171,7 @@ class Pykuli(object):
 
 if __name__ == u'__main__':
     pykuli = Pykuli(u'../')
-    pykuli.click(u'teste2.png', 10)
+    pykuli.click(u'teste.png', 10)
     pykuli.press_key(u'K')
     pykuli.release_key(u'K')
     pykuli.type_string(u'Testing something')
