@@ -5,6 +5,23 @@ import pykuli_exceptions
 
 
 def template_match(screenshot, image):
+    """
+    This function is used to perform template matching
+    between the screenshot and the image we want to find.
+    It will look pixel by pixel.
+
+    Args:
+        screenshot (pillow image): screenshot from the 1st monitor.
+        image (pillow image): image we want to search.
+
+    Return:
+        Return the X and Y position of the center of the image
+        that matches, so we can click on it.
+
+    Raises:
+        If could not find any match it will raises the
+        pykuli_exceptions.NoMatchException.
+    """
 
     screenshot_width = screenshot.size[0]
     screenshot_height = screenshot.size[1]
@@ -26,7 +43,7 @@ def template_match(screenshot, image):
                         if screenshot_pm[i1 + i2, j1 + j2] != image_pm[i2, j2]:
                             raise Exception(u'Pixel is not equal')
 
-                return i1, j1# + (image_width / 2), j1 + (image_height / 2)
+                return i1 + (image_width / 2), j1 + (image_height / 2)
 
             except Exception:
                 continue
