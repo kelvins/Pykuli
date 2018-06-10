@@ -114,6 +114,33 @@ class Pykuli(object):
         except pykuli_exceptions.NoMatchException:
             return None
 
+    def wait(self, image_path, seconds=0):
+        """
+        Wait for an element to appear at most N seconds.
+
+        Args:
+            image_path (str): path to the image we want to match.
+            Note that this will be concatenated to the default_path.
+            seconds (int): seconds to wait for the image to appear.
+        """
+
+        datetime_limit = datetime.now() + timedelta(seconds=seconds)
+        last_datetime = None
+
+        while True:
+
+            if last_datetime and last_datetime > datetime_limit:
+                break
+
+            last_datetime = datetime.now()
+
+            pos = self.exists(image_path)
+
+            if pos:
+                return pos
+
+        return None
+
     def click(self, image_path, seconds=0):
         """
         This is one of the main class of the project.
