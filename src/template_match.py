@@ -33,19 +33,21 @@ def template_match(screenshot, image):
     screenshot_pm = screenshot.load()
     image_pm = image.load()
 
-    for i1 in xrange(screenshot_width-image_width):
-        for j1 in xrange(screenshot_height-image_height):
+    # For each row, go through each column
+    for y1 in xrange(screenshot_height-image_height):
+        for x1 in xrange(screenshot_width-image_width):
 
             try:
-                for i2 in xrange(image_width):
-                    for j2 in xrange(image_height):
+                # For each row, go through each column
+                for y2 in xrange(image_height):
+                    for x2 in xrange(image_width):
 
-                        if screenshot_pm[i1 + i2, j1 + j2] != image_pm[i2, j2]:
+                        if screenshot_pm[x1 + x2, y1 + y2] != image_pm[x2, y2]:
                             raise Exception(u'Pixel is not equal')
 
                 return (
-                    i1 + (image_width / 2),
-                    j1 + (image_height / 2)
+                    x1 + (image_width / 2),
+                    y1 + (image_height / 2)
                 )
 
             except Exception:

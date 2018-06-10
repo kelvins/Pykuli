@@ -163,7 +163,7 @@ class Pykuli(object):
 
         x_pos, y_pos = position
 
-        self.logger.info(u'CLICK AT (%s, %s)', x_pos, y_pos)
+        self.logger.info(u'CLICK AT %s', position)
 
         self.mouse.move(x_pos, y_pos)
         self.mouse.click(x_pos, y_pos)
@@ -171,7 +171,7 @@ class Pykuli(object):
 
 if __name__ == u'__main__':
     pykuli = Pykuli(u'../')
-    pykuli.click(u'teste.png', 10)
+    pykuli.click(u'teste.png')
     pykuli.press_key(u'K')
     pykuli.release_key(u'K')
     pykuli.type_string(u'Testing something')
