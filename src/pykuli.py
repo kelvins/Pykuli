@@ -5,14 +5,19 @@ The Pykuli project is inspired by Sikuli.
 With the Pykuli class you can automate everything you see.
 """
 import time
+import logging
+from logging.config import fileConfig
+from datetime import datetime, timedelta
 
-from pykeyboard import PyKeyboard
-from pymouse import PyMouse
-from PIL import Image
 from mss import mss
-from template_match import template_match
+from PIL import Image
+from pymouse import PyMouse
+from pykeyboard import PyKeyboard
 
 import pykuli_exceptions
+from template_match import template_match
+
+fileConfig(u'logging_config.ini')
 
 
 class Pykuli(object):
@@ -27,6 +32,7 @@ class Pykuli(object):
         self.mouse = PyMouse()
         self.keyboard = PyKeyboard()
         self.default_path = default_path
+        self.logger = logging.getLogger()
 
     @staticmethod
     def wait(seconds):
@@ -53,7 +59,7 @@ class Pykuli(object):
             sct_img = sct.grab(sct.monitors[1])
 
             # Create an Image
-            img = Image.new('RGB', sct_img.size)
+            img = Image.new(u'RGB', sct_img.size)
 
             # Best solution: create a list(tuple(R, G, B), ...) for putdata()
             pixels = zip(sct_img.raw[2::4],
@@ -64,7 +70,7 @@ class Pykuli(object):
 
             return img
 
-    def click(self, image_path):
+    def click(self, image_path, seconds=0):
         """
         This is one of the main class of the project.
         By using this class the user can click on a specific
@@ -73,21 +79,42 @@ class Pykuli(object):
         Args:
             image_path (str): path to the image we want to match.
             Note that this will be concatenated to the default_path.
+            seconds (int): seconds to wait for the image to appear.
         """
 
-        try:
-            image = Image.open(self.default_path + image_path)
-            image = image.convert("RGB")
-            screenshot = self.take_screenshot()
-            x, y = template_match(screenshot, image)
-            self.mouse.move(x, y)
-            self.mouse.click(x, y)
-        except pykuli_exceptions.NoMatchException as err:
-            print err
-        except Exception as err:
-            print err
+        datetime_limit = datetime.now() + timedelta(seconds=seconds)
+        last_datetime = None
+
+        while True:
+            try:
+                if last_datetime and last_datetime > datetime_limit:
+                    self.logger.warning(u'Timeout reached!')
+                    break
+
+                self.logger.info(u'Performing template matching...')
+
+                last_datetime = datetime.now()
+
+                image = Image.open(self.default_path + image_path)
+                image = image.convert(u'RGB')
+
+                screenshot = self.take_screenshot()
+
+                x, y = template_match(screenshot, image)
+
+                self.logger.info(u'CLICK AT (%s, %s)', x, y)
+
+                self.mouse.move(x, y)
+                self.mouse.click(x, y)
+
+                return
+
+            except pykuli_exceptions.NoMatchException:
+                self.logger.error(u'No match found, trying again...')
+
+        self.logger.error(u'No match found, exiting!')
 
 
 if __name__ == u'__main__':
     p = Pykuli(u'../')
-    p.click(u'teste.png')
+    p.click(u'teste2.png', 10)
