@@ -130,6 +130,7 @@ class Pykuli(object):
         while True:
 
             if last_datetime and last_datetime > datetime_limit:
+                self.logger.warning(u'Timeout reached!')
                 break
 
             last_datetime = datetime.now()
@@ -153,37 +154,20 @@ class Pykuli(object):
             seconds (int): seconds to wait for the image to appear.
         """
 
-        datetime_limit = datetime.now() + timedelta(seconds=seconds)
-        last_datetime = None
+        self.logger.info(u'Performing template matching...')
 
-        while True:
-            try:
-                if last_datetime and last_datetime > datetime_limit:
-                    self.logger.warning(u'Timeout reached!')
-                    break
+        position = self.wait(image_path, seconds)
 
-                self.logger.info(u'Performing template matching...')
+        if not position:
+            self.logger.error(u'No match found, exiting!')
+            return
 
-                last_datetime = datetime.now()
+        x_pos, y_pos = position
 
-                image = Image.open(self.default_path + image_path)
-                image = image.convert(u'RGB')
+        self.logger.info(u'CLICK AT (%s, %s)', x_pos, y_pos)
 
-                screenshot = self.take_screenshot()
-
-                x_pos, y_pos = template_match(screenshot, image)
-
-                self.logger.info(u'CLICK AT (%s, %s)', x_pos, y_pos)
-
-                self.mouse.move(x_pos, y_pos)
-                self.mouse.click(x_pos, y_pos)
-
-                return
-
-            except pykuli_exceptions.NoMatchException:
-                self.logger.error(u'No match found, trying again...')
-
-        self.logger.error(u'No match found, exiting!')
+        self.mouse.move(x_pos, y_pos)
+        self.mouse.click(x_pos, y_pos)
 
 
 if __name__ == u'__main__':
