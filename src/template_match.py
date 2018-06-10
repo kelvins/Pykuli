@@ -15,8 +15,8 @@ def template_match(screenshot, image):
         image (pillow image): image we want to search.
 
     Return:
-        Return the X and Y position of the center of the image
-        that matches, so we can click on it.
+        Return a tuple with the positions (e.g. (x, y)) of the
+        center of the image that matches, so we can click on it.
 
     Raises:
         If could not find any match it will raises the
@@ -43,7 +43,10 @@ def template_match(screenshot, image):
                         if screenshot_pm[i1 + i2, j1 + j2] != image_pm[i2, j2]:
                             raise Exception(u'Pixel is not equal')
 
-                return i1 + (image_width / 2), j1 + (image_height / 2)
+                return (
+                    i1 + (image_width / 2),
+                    j1 + (image_height / 2)
+                )
 
             except Exception:
                 continue

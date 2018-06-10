@@ -67,16 +67,6 @@ class Pykuli(object):
         self.keyboard.type_string(string)
 
     @staticmethod
-    def wait(seconds):
-        """
-        Wait method is just a wrapper for the time.sleep function.
-
-        Args:
-            seconds (int): seconds to sleep.
-        """
-        time.sleep(seconds)
-
-    @staticmethod
     def take_screenshot():
         """
         This method uses the mss package to take a screen shot
@@ -101,6 +91,28 @@ class Pykuli(object):
             img.putdata(list(pixels))
 
             return img
+
+    def exists(self, image_path):
+        """
+        Check if a template matching exists.
+
+        Args:
+            image_path (str): path to the image we want to match.
+
+        Return:
+            If the image exists, it will return a tuple with the
+            position (e.g. (x, y)), otherwise it will return None.
+        """
+        try:
+            image = Image.open(self.default_path + image_path)
+            image = image.convert(u'RGB')
+
+            screenshot = self.take_screenshot()
+
+            return template_match(screenshot, image)
+
+        except pykuli_exceptions.NoMatchException:
+            return None
 
     def click(self, image_path, seconds=0):
         """
@@ -150,3 +162,6 @@ class Pykuli(object):
 if __name__ == u'__main__':
     pykuli = Pykuli(u'../')
     pykuli.click(u'teste2.png', 10)
+    pykuli.press_key(u'K')
+    pykuli.release_key(u'K')
+    pykuli.type_string(u'Testing something')
