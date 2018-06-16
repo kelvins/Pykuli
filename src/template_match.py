@@ -46,8 +46,8 @@ def template_match(screenshot, image):
                             raise Exception(u'Pixel is not equal')
 
                 return (
-                    x1 + (image_width / 2),
-                    y1 + (image_height / 2)
+                    (x1 + (image_width / 2)) / 2,
+                    (y1 + (image_height / 2)) / 2
                 )
 
             except Exception:
