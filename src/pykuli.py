@@ -38,7 +38,7 @@ class Pykuli(object):
         Wrapper for the PyKeyboard press_key method.
         It is only used to show a logging for debugging purposes.
         """
-        self.logger.info(u'PRESS KEY "%s"', key)
+        self.logger.info(u'PRESS KEY "%s"', str(key))
         self.keyboard.press_key(key)
 
     def release_key(self, key):
@@ -46,7 +46,7 @@ class Pykuli(object):
         Wrapper for the PyKeyboard release_key method.
         It is only used to show a logging for debugging purposes.
         """
-        self.logger.info(u'RELEASE KEY "%s"', key)
+        self.logger.info(u'RELEASE KEY "%s"', str(key))
         self.keyboard.release_key(key)
 
     def tap_key(self, key):
@@ -54,7 +54,7 @@ class Pykuli(object):
         Wrapper for the PyKeyboard tap_key method.
         It is only used to show a logging for debugging purposes.
         """
-        self.logger.info(u'TAP KEY "%s"', key)
+        self.logger.info(u'TAP KEY "%s"', str(key))
         self.keyboard.tap_key(key)
 
     def type_string(self, string):
@@ -170,8 +170,7 @@ class Pykuli(object):
 
 
 if __name__ == u'__main__':
-    pykuli = Pykuli(u'../')
+    pykuli = Pykuli(u'../img/')
     pykuli.click(u'teste.png')
-    pykuli.press_key(u'K')
-    pykuli.release_key(u'K')
-    pykuli.type_string(u'Testing something')
+    pykuli.type_string(u'a')
+    pykuli.tap_key('return')
