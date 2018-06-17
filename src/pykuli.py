@@ -4,12 +4,14 @@
 The Pykuli project is inspired by Sikuli.
 With the Pykuli class you can automate everything you see.
 """
+import os
 import logging
 from logging.config import fileConfig
 from datetime import datetime, timedelta
 
 from mss import mss
-from PIL import Image
+from skimage import io
+from skimage.color import rgb2gray
 from pymouse import PyMouse
 from pykeyboard import PyKeyboard
 
@@ -65,31 +67,15 @@ class Pykuli(object):
         self.logger.info(u'TYPE STRING "%s"', string)
         self.keyboard.type_string(string)
 
-    @staticmethod
-    def take_screenshot():
+    def take_screenshot(self):
         """
-        This method uses the mss package to take a screen shot
-        of the screen and return a Pillow format image.
-
-        Return:
-            A Pillow image.
+        This method uses the mss package to take a screen shot of the screen.
         """
         with mss() as sct:
-
-            # Get a screenshot of the 1st monitor
-            sct_img = sct.grab(sct.monitors[1])
-
-            # Create an Image
-            img = Image.new(u'RGB', sct_img.size)
-
-            # Best solution: create a list(tuple(R, G, B), ...) for putdata()
-            pixels = zip(sct_img.raw[2::4],
-                         sct_img.raw[1::4],
-                         sct_img.raw[0::4])
-
-            img.putdata(list(pixels))
-
-            return img
+            sct.shot()
+        screenshot = io.imread(u'monitor-1.png')
+        os.remove(u'monitor-1.png')
+        return screenshot
 
     def exists(self, image_path):
         """
@@ -103,10 +89,11 @@ class Pykuli(object):
             position (e.g. (x, y)), otherwise it will return None.
         """
         try:
-            image = Image.open(self.default_path + image_path)
-            image = image.convert(u'RGB')
+            image = io.imread(self.default_path + image_path)
+            image = rgb2gray(image)
 
             screenshot = self.take_screenshot()
+            screenshot = rgb2gray(screenshot)
 
             return template_match(screenshot, image)
 
