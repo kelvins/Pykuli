@@ -18,6 +18,20 @@ Depending on your platform, you will need the following python modules for PyUse
 - Mac: Quartz, AppKit
 - Windows: pywin32, pyHook
 
+# Usage
+
+```python
+pykuli = Pykuli('imgs/')
+
+pykuli.click('username_input.png')
+pykuli.type_string('username')
+
+pykuli.click('password_input.png')
+pykuli.type_string('password')
+
+pykuli.tap_key('return')
+```
+
 ## License
 
 This project is developed under the GPL-3.0 license.
