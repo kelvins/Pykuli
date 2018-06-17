@@ -70,11 +70,16 @@ class Pykuli(object):
     def take_screenshot(self):
         """
         This method uses the mss package to take a screen shot of the screen.
+
+        Returns:
+            Return the screenshot as an scikit image object.
         """
         with mss() as sct:
-            sct.shot()
-        screenshot = io.imread(u'monitor-1.png')
-        os.remove(u'monitor-1.png')
+            file_name = sct.shot()
+
+        screenshot = io.imread(file_name)
+        os.remove(file_name)
+
         return screenshot
 
     def exists(self, image_path):
