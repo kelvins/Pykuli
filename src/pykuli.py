@@ -29,7 +29,7 @@ class Pykuli(object):
         default_path (str): the default path where the images are.
     """
 
-    def __init__(self, default_path=u''):
+    def __init__(self, default_path=u'./'):
         self.mouse = PyMouse()
         self.keyboard = PyKeyboard()
         self.default_path = default_path
@@ -72,12 +72,14 @@ class Pykuli(object):
         This method uses the mss package to take a screen shot of the screen.
 
         Returns:
-            Return the screenshot as an scikit image object.
+            Return the screenshot (grayscale) as an scikit image object.
         """
         with mss() as sct:
             file_name = sct.shot()
 
         screenshot = io.imread(file_name)
+        screenshot = rgb2gray(screenshot)
+
         os.remove(file_name)
 
         return screenshot
@@ -98,7 +100,6 @@ class Pykuli(object):
             image = rgb2gray(image)
 
             screenshot = self.take_screenshot()
-            screenshot = rgb2gray(screenshot)
 
             return template_match(screenshot, image)
 
@@ -118,6 +119,10 @@ class Pykuli(object):
         datetime_limit = datetime.now() + timedelta(seconds=seconds)
         last_datetime = None
 
+        # Load the template image in grayscale
+        image = io.imread(self.default_path + image_path)
+        image = rgb2gray(image)
+
         while True:
 
             if last_datetime and last_datetime > datetime_limit:
@@ -126,10 +131,12 @@ class Pykuli(object):
 
             last_datetime = datetime.now()
 
-            pos = self.exists(image_path)
+            screenshot = self.take_screenshot()
 
-            if pos:
-                return pos
+            try:
+                return template_match(screenshot, image)
+            except pykuli_exceptions.NoMatchException:
+                continue
 
         return None
 
