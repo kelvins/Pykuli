@@ -11,7 +11,6 @@ from datetime import datetime, timedelta
 
 from mss import mss
 from skimage import io
-from skimage.color import rgb2gray
 from pymouse import PyMouse
 from pykeyboard import PyKeyboard
 
@@ -30,9 +29,12 @@ class Pykuli(object):
     """
 
     def __init__(self, default_path=u'./'):
+
         self.mouse = PyMouse()
         self.keyboard = PyKeyboard()
+
         self.default_path = default_path
+
         self.logger = logging.getLogger()
 
     def press_key(self, key):
@@ -77,8 +79,7 @@ class Pykuli(object):
         with mss() as sct:
             file_name = sct.shot()
 
-        screenshot = io.imread(file_name)
-        screenshot = rgb2gray(screenshot)
+        screenshot = io.imread(file_name, as_gray=True)
 
         os.remove(file_name)
 
@@ -96,8 +97,7 @@ class Pykuli(object):
             position (e.g. (x, y)), otherwise it will return None.
         """
         try:
-            image = io.imread(self.default_path + image_path)
-            image = rgb2gray(image)
+            image = io.imread(self.default_path + image_path, as_gray=True)
 
             screenshot = self.take_screenshot()
 
@@ -120,8 +120,7 @@ class Pykuli(object):
         last_datetime = None
 
         # Load the template image in grayscale
-        image = io.imread(self.default_path + image_path)
-        image = rgb2gray(image)
+        image = io.imread(self.default_path + image_path, as_gray=True)
 
         while True:
 
