@@ -7,7 +7,7 @@ from skimage.feature import match_template
 import pykuli_exceptions
 
 
-def template_match(screenshot, image):
+def template_match(screenshot, image, threshold):
     """
     Perform the template match and return the X and Y positions
     when there is a valid match.
@@ -15,21 +15,23 @@ def template_match(screenshot, image):
     Args:
         screenshot (scikit image): screenshot image.
         image (scikit image): template image.
+        threshold (float): threshold used to check for a valid match.
 
     Returns:
-        Return the X and Y positions if there is a match.
+        If a match was found, return the X and Y positions.
 
     Raises:
-        Raises de NoMatchException exception if there is no match.
+        Raises the NoMatchException exception if there is no match.
     """
 
     result = match_template(screenshot, image, pad_input=True)
 
-    x, y = np.unravel_index(np.argmax(result), result.shape)[::-1]
+    max_correlation = np.max(result)
 
-    return (
-        x / 2,
-        y / 2
-    )
+    if max_correlation > threshold:
 
-    raise pykuli_exceptions.NoMatchException(u'There is no match')
+        x, y = np.unravel_index(np.argmax(result), result.shape)[::-1]
+
+        return x / 2, y / 2
+
+    raise pykuli_exceptions.NoMatchException()
