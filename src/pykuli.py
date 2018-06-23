@@ -26,13 +26,15 @@ class Pykuli(object):
 
     Args:
         default_path (str): the default path where the images are.
+        threshold (float): threshold used to consider a match.
     """
 
-    def __init__(self, default_path=u'./'):
+    def __init__(self, default_path=u'./', threshold=0.90):
 
         self.mouse = PyMouse()
         self.keyboard = PyKeyboard()
 
+        self.threshold = threshold
         self.default_path = default_path
 
         self.logger = logging.getLogger()
@@ -101,7 +103,7 @@ class Pykuli(object):
 
             screenshot = self.take_screenshot()
 
-            return template_match(screenshot, image)
+            return template_match(screenshot, image, self.threshold)
 
         except pykuli_exceptions.NoMatchException:
             return None
@@ -133,7 +135,7 @@ class Pykuli(object):
             screenshot = self.take_screenshot()
 
             try:
-                return template_match(screenshot, image)
+                return template_match(screenshot, image, self.threshold)
             except pykuli_exceptions.NoMatchException:
                 continue
 
