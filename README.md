@@ -27,7 +27,7 @@ Depending on your platform, you will need the following python modules for PyUse
 
 # Usage
 
-Performs a login into a dummy example:
+Performs login into a dummy example:
 
 ```python
 pykuli = Pykuli('imgs/')
