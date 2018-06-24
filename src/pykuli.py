@@ -161,12 +161,12 @@ class Pykuli(object):
 
         self.logger.info(u'Performing template matching...')
 
-        position = self.wait(image_path, seconds)
-
-        if not position:
+        try:
+            position = self.wait(image_path, seconds)
+        except pykuli_exceptions.TimeoutException:
             raise pykuli_exceptions.NoMatchFoundException(
-                u'No match was found using the {image_path} template image '
-                u'with the {threshold} threshold in {seconds} seconds'.format(
+                u'No match was found using the {image_path} template with '
+                u'a threshold of {threshold} in {seconds} second(s)'.format(
                     image_path=image_path,
                     threshold=self.threshold,
                     seconds=seconds
