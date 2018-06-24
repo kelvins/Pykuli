@@ -20,10 +20,10 @@ class TestPykuli(object):
 
         # Extract and save a template from a screenshot
         template = pykuli.take_screenshot()
-        template = template[0:100, 0:100]
+        template = template[0:20, 0:20]
         io.imsave(template_path, template)
 
-        expected_result = (25, 25)
+        expected_result = (5, 5)
         result = pykuli.exists(u'template_test.png')
 
         # Remove the saved image file
@@ -42,10 +42,10 @@ class TestPykuli(object):
 
         # Extract and save a template from a screenshot
         template = pykuli.take_screenshot()
-        template = template[0:100, 0:100]
+        template = template[0:20, 0:20]
         io.imsave(template_path, template)
 
-        expected_result = (25, 25)
+        expected_result = (5, 5)
         result = pykuli.wait(u'template_test.png')
 
         # Remove the saved image file
