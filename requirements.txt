@@ -2,4 +2,4 @@ mss==3.2.1
 pytest==3.6.1
 PyUserInput==0.1.11
 scikit-image==0.14.0
-pyobjc-framework-Quartz==4.2.2 # For OSX
+#pyobjc-framework-Quartz==4.2.2 # Only for OSX
