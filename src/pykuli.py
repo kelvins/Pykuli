@@ -17,7 +17,7 @@ from pykeyboard import PyKeyboard
 import pykuli_exceptions
 from template_match import template_match
 
-fileConfig(u'logging_config.ini')
+fileConfig(u'src/logging_config.ini')
 
 
 class Pykuli(object):
@@ -199,10 +199,3 @@ class Pykuli(object):
 
         self.mouse.move(x_pos, y_pos)
         self.mouse.click(x_pos, y_pos, self.MOUSE_BUTTON_MAPPING[button])
-
-
-if __name__ == u'__main__':
-    pykuli = Pykuli(u'../img/')
-    pykuli.click(u'teste.png')
-    pykuli.type_string(u'a')
-    pykuli.tap_key(u'return')
