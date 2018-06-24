@@ -47,37 +47,45 @@ class Pykuli(object):
 
         self.logger = logging.getLogger()
 
+    def __keyboard_wrapper(self, method, param, prefix_msg):
+        """
+        Wrapper for the PyKeyboard methods.
+
+        Args:
+            method: PyKeyboard method.
+            param: parameter passed to the PyKeyboard method.
+            prefix_msg (unicode): prefix message which is shown in the logger.
+        """
+        self.logger.info(u'%s "%s"', prefix_msg, str(param))
+        method(param)
+
     def press_key(self, key):
         """
         Wrapper for the PyKeyboard press_key method.
         It is only used to show a logging for debugging purposes.
         """
-        self.logger.info(u'PRESS KEY "%s"', str(key))
-        self.keyboard.press_key(key)
+        self.__keyboard_wrapper(self.keyboard.press_key, key, u'PRESS KEY')
 
     def release_key(self, key):
         """
         Wrapper for the PyKeyboard release_key method.
         It is only used to show a logging for debugging purposes.
         """
-        self.logger.info(u'RELEASE KEY "%s"', str(key))
-        self.keyboard.release_key(key)
+        self.__keyboard_wrapper(self.keyboard.release_key, key, u'RELEASE KEY')
 
     def tap_key(self, key):
         """
         Wrapper for the PyKeyboard tap_key method.
         It is only used to show a logging for debugging purposes.
         """
-        self.logger.info(u'TAP KEY "%s"', str(key))
-        self.keyboard.tap_key(key)
+        self.__keyboard_wrapper(self.keyboard.tap_key, key, u'TAP KEY')
 
-    def type_string(self, string):
+    def type_string(self, keys):
         """
         Wrapper for the PyKeyboard type_string method.
         It is only used to show a logging for debugging purposes.
         """
-        self.logger.info(u'TYPE STRING "%s"', string)
-        self.keyboard.type_string(string)
+        self.__keyboard_wrapper(self.keyboard.type_string, keys, u'TYPE STRING')
 
     @staticmethod
     def take_screenshot():
@@ -197,4 +205,4 @@ if __name__ == u'__main__':
     pykuli = Pykuli(u'../img/')
     pykuli.click(u'teste.png')
     pykuli.type_string(u'a')
-    pykuli.tap_key('return')
+    pykuli.tap_key(u'return')
