@@ -1,6 +1,6 @@
 # Pykuli
 
-<img src="https://i.imgur.com/78LnbM5.png" alt="Pykuli logo" title="Pykuli logo" align="right" />
+<img src="https://github.com/kelvins/Pykuli/blob/master/tests/resources/pykuli.png" alt="Pykuli logo" title="Pykuli logo" align="right" />
  
 [![Travis](https://travis-ci.org/kelvins/Pykuli.svg?branch=master)](https://travis-ci.org/kelvins/Pykuli)
 [![Coverage Status](https://coveralls.io/repos/github/kelvins/Pykuli/badge.svg?branch=master)](https://coveralls.io/github/kelvins/Pykuli?branch=master)
