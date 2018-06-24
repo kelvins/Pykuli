@@ -31,6 +31,12 @@ class Pykuli(object):
         threshold (float): threshold used to consider a match.
     """
 
+    MOUSE_BUTTON_MAPPING = {
+        u'left': 1,
+        u'right': 2,
+        u'middle': 3,
+    }
+
     def __init__(self, default_path=u'./', threshold=0.90):
 
         self.mouse = PyMouse()
@@ -97,7 +103,7 @@ class Pykuli(object):
         (path passed by parameter) and the current screen shot.
 
         Args:
-            image_path (str): path to the template image we want to match.
+            image_path (unicode): path to the template image we want to match.
 
         Return:
             If a match was found, it will return the X and Y positions (tuple).
@@ -116,7 +122,7 @@ class Pykuli(object):
         Implicit wait. Wait for an element to appear at most N seconds.
 
         Args:
-            image_path (str): path to the template image we want to match.
+            image_path (unicode): path to the template image we want to match.
             seconds (int): seconds to wait for the image to appear.
 
         Returns:
@@ -146,26 +152,32 @@ class Pykuli(object):
             except pykuli_exceptions.NoMatchFoundException:
                 continue
 
-    def click(self, image_path, seconds=0):
+    def click(self, image_path, seconds=0, button=u'left'):
         """
         The click method is responsible for searching for a match
         and click on the object.
 
         Args:
-            image_path (str): path to the template image we want to match.
+            image_path (unicode): path to the template image we want to match.
             seconds (int): seconds to wait for the image to appear.
+            button (unicode): mouse button option (e.g. left, right or middle).
 
         Raises:
             Raises the NoMatchFoundException exception if no match was found.
+            Raises the InvalidMouseButtonException if the button is invalid.
         """
 
-        self.logger.info(u'Performing template matching...')
+        # Check if the button option is valid before the template match
+        if button not in self.MOUSE_BUTTON_MAPPING:
+            raise pykuli_exceptions.InvalidMouseButtonException(
+                u'Button "{}" is not a valid mouse button option'.format(button)
+            )
 
         try:
             position = self.wait(image_path, seconds)
         except pykuli_exceptions.TimeoutException:
             raise pykuli_exceptions.NoMatchFoundException(
-                u'No match was found using the {image_path} template with '
+                u'No match was found using the "{image_path}" template with '
                 u'a threshold of {threshold} in {seconds} second(s)'.format(
                     image_path=image_path,
                     threshold=self.threshold,
@@ -178,7 +190,7 @@ class Pykuli(object):
         self.logger.info(u'CLICK AT %s', position)
 
         self.mouse.move(x_pos, y_pos)
-        self.mouse.click(x_pos, y_pos)
+        self.mouse.click(x_pos, y_pos, self.MOUSE_BUTTON_MAPPING[button])
 
 
 if __name__ == u'__main__':

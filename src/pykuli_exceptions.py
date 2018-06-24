@@ -12,3 +12,7 @@ class NoMatchFoundException(PykuliBaseException):
 
 class TimeoutException(PykuliBaseException):
     pass
+
+
+class InvalidMouseButtonException(PykuliBaseException):
+    pass
