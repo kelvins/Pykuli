@@ -18,10 +18,10 @@ def template_match(screenshot, image, threshold):
         threshold (float): threshold used to check for a valid match.
 
     Returns:
-        If a match was found, return the X and Y positions.
+        If a match was found, return the X and Y positions (tuple).
 
     Raises:
-        Raises the NoMatchException exception if there is no match.
+        Raises the NoMatchFoundException exception if there is no match.
     """
 
     result = match_template(screenshot, image, pad_input=True)
@@ -32,6 +32,6 @@ def template_match(screenshot, image, threshold):
 
         x, y = np.unravel_index(np.argmax(result), result.shape)[::-1]
 
-        return x / 2, y / 2
+        return (x / 2, y / 2)
 
-    raise pykuli_exceptions.NoMatchException()
+    raise pykuli_exceptions.NoMatchFoundException()

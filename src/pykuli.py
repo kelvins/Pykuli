@@ -26,6 +26,8 @@ class Pykuli(object):
 
     Args:
         default_path (str): the default path where the images are.
+        This parameter will be used as a prefix for all methods that
+        uses a template image.
         threshold (float): threshold used to consider a match.
     """
 
@@ -71,9 +73,11 @@ class Pykuli(object):
         self.logger.info(u'TYPE STRING "%s"', string)
         self.keyboard.type_string(string)
 
-    def take_screenshot(self):
+    @staticmethod
+    def take_screenshot():
         """
-        This method uses the mss package to take a screen shot of the screen.
+        Static method which uses the mss package to take a
+        screen shot and return it as a scikit image.
 
         Returns:
             Return the screenshot (grayscale) as an scikit image object.
@@ -89,33 +93,37 @@ class Pykuli(object):
 
     def exists(self, image_path):
         """
-        Check if a template matching exists.
+        Check if there is a match between the template image
+        (path passed by parameter) and the current screen shot.
 
         Args:
-            image_path (str): path to the image we want to match.
+            image_path (str): path to the template image we want to match.
 
         Return:
-            If the image exists, it will return a tuple with the
-            position (e.g. (x, y)), otherwise it will return None.
+            If a match was found, it will return the X and Y positions (tuple).
+
+        Raises:
+            Raises the NoMatchFoundException exception if no match was found.
         """
-        try:
-            image = io.imread(self.default_path + image_path, as_gray=True)
+        image = io.imread(self.default_path + image_path, as_gray=True)
 
-            screenshot = self.take_screenshot()
+        screenshot = self.take_screenshot()
 
-            return template_match(screenshot, image, self.threshold)
-
-        except pykuli_exceptions.NoMatchException:
-            return None
+        return template_match(screenshot, image, self.threshold)
 
     def wait(self, image_path, seconds=0):
         """
-        Wait for an element to appear at most N seconds.
+        Implicit wait. Wait for an element to appear at most N seconds.
 
         Args:
-            image_path (str): path to the image we want to match.
-            Note that this will be concatenated to the default_path.
+            image_path (str): path to the template image we want to match.
             seconds (int): seconds to wait for the image to appear.
+
+        Returns:
+            If a match was found, it will return the X and Y positions (tuple).
+
+        Raises:
+            Raises the TimeoutException exception if no match was found.
         """
 
         datetime_limit = datetime.now() + timedelta(seconds=seconds)
@@ -127,8 +135,7 @@ class Pykuli(object):
         while True:
 
             if last_datetime and last_datetime > datetime_limit:
-                self.logger.warning(u'Timeout reached!')
-                break
+                raise pykuli_exceptions.TimeoutException()
 
             last_datetime = datetime.now()
 
@@ -136,21 +143,20 @@ class Pykuli(object):
 
             try:
                 return template_match(screenshot, image, self.threshold)
-            except pykuli_exceptions.NoMatchException:
+            except pykuli_exceptions.NoMatchFoundException:
                 continue
-
-        return None
 
     def click(self, image_path, seconds=0):
         """
-        This is one of the main class of the project.
-        By using this class the user can click on a specific
-        location of the screen, based on the image passed by parameter.
+        The click method is responsible for searching for a match
+        and click on the object.
 
         Args:
-            image_path (str): path to the image we want to match.
-            Note that this will be concatenated to the default_path.
+            image_path (str): path to the template image we want to match.
             seconds (int): seconds to wait for the image to appear.
+
+        Raises:
+            Raises the NoMatchFoundException exception if no match was found.
         """
 
         self.logger.info(u'Performing template matching...')
@@ -158,8 +164,14 @@ class Pykuli(object):
         position = self.wait(image_path, seconds)
 
         if not position:
-            self.logger.error(u'No match found, exiting!')
-            return
+            raise pykuli_exceptions.NoMatchFoundException(
+                u'No match was found using the {image_path} template image '
+                u'with the {threshold} threshold in {seconds} seconds'.format(
+                    image_path=image_path,
+                    threshold=self.threshold,
+                    seconds=seconds
+                )
+            )
 
         x_pos, y_pos = position
 

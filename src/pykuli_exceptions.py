@@ -2,5 +2,13 @@
 # -*- encoding: utf-8 -*-
 
 
-class NoMatchException(Exception):
+class PykuliBaseException(Exception):
+    pass
+
+
+class NoMatchFoundException(PykuliBaseException):
+    pass
+
+
+class TimeoutException(PykuliBaseException):
     pass
