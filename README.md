@@ -1,5 +1,7 @@
 # Pykuli
 
+<img src="https://i.imgur.com/78LnbM5.png" alt="Pykuli logo" title="Pykuli logo" align="right" />
+ 
 [![Travis](https://travis-ci.org/kelvins/Pykuli.svg?branch=master)](https://travis-ci.org/kelvins/Pykuli)
 [![Coverage Status](https://coveralls.io/repos/github/kelvins/Pykuli/badge.svg?branch=master)](https://coveralls.io/github/kelvins/Pykuli?branch=master)
 [![License: GPL](https://img.shields.io/badge/License-GPL-brightgreen.svg)](LICENSE)
@@ -19,11 +21,13 @@ Some dependencies that you may need to install.
 
 Depending on your platform, you will need the following python modules for PyUserInput to function:
 
-- Linux: Xlib
-- Mac: Quartz, AppKit
-- Windows: pywin32, pyHook
+- **Linux**: Xlib
+- **Mac**: Quartz, AppKit
+- **Windows**: pywin32, pyHook
 
 # Usage
+
+Performs a login into a dummy example:
 
 ```python
 pykuli = Pykuli('imgs/')
