@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 # -*- encoding: utf-8 -*-
+import sys
 
 import numpy as np
 from skimage.feature import match_template
@@ -32,6 +33,10 @@ def template_match(screenshot, image, threshold):
 
         x, y = np.unravel_index(np.argmax(result), result.shape)[::-1]
 
-        return x / 2, y / 2
+        # For some reason on OS X we need to divide it by two
+        if sys.platform == u'darwin':
+            return x / 2, y / 2
+
+        return x, y
 
     raise pykuli_exceptions.NoMatchFoundException()
