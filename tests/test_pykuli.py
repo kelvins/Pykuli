@@ -14,16 +14,28 @@ from src import pykuli_exceptions
 
 class TestPykuli(object):
 
+    @staticmethod
+    def get_template_based_on_platform(template):
+        if sys.platform == u'darwin':
+            return template[0:100, 0:100]
+        return template[0:20, 0:20]
+
+    @staticmethod
+    def get_expected_result_based_on_platform():
+        if sys.platform == u'darwin':
+            return 25, 25
+        return 5, 5
+
     def test_exists_with_valid_template(self):
         pykuli = Pykuli(u'tests/resources/')
         template_path = pykuli.default_path + u'template_test.png'
 
         # Extract and save a template from a screenshot
         template = pykuli.take_screenshot()
-        template = template[0:20, 0:20]
+        template = self.get_template_based_on_platform(template)
         io.imsave(template_path, template)
 
-        expected_result = (5, 5)
+        expected_result = self.get_expected_result_based_on_platform()
         result = pykuli.exists(u'template_test.png')
 
         # Remove the saved image file
@@ -42,10 +54,10 @@ class TestPykuli(object):
 
         # Extract and save a template from a screenshot
         template = pykuli.take_screenshot()
-        template = template[0:20, 0:20]
+        template = self.get_template_based_on_platform(template)
         io.imsave(template_path, template)
 
-        expected_result = (5, 5)
+        expected_result = self.get_expected_result_based_on_platform()
         result = pykuli.wait(u'template_test.png')
 
         # Remove the saved image file
