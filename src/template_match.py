@@ -32,6 +32,6 @@ def template_match(screenshot, image, threshold):
 
         x, y = np.unravel_index(np.argmax(result), result.shape)[::-1]
 
-        return (x / 2, y / 2)
+        return x / 2, y / 2
 
     raise pykuli_exceptions.NoMatchFoundException()
